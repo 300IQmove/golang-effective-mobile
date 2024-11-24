@@ -1,0 +1,200 @@
+definitions:
+  handlers.AddSongRequest:
+    properties:
+      group:
+        description: Название группы
+        type: string
+      song:
+        description: Название песни
+        type: string
+    type: object
+  handlers.Song:
+    properties:
+      group_name:
+        type: string
+      id:
+        type: integer
+      link:
+        type: string
+      release_date:
+        type: string
+      song_title:
+        type: string
+      text:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /songs:
+    get:
+      description: Возвращает массив песен с базовой информацией, включая фильтрацию
+        и пагинацию
+      parameters:
+      - description: Название группы
+        in: query
+        name: group_name
+        type: string
+      - description: Название песни
+        in: query
+        name: song_title
+        type: string
+      - description: Дата выпуска (YYYY-MM-DD)
+        in: query
+        name: release_date
+        type: string
+      - description: Номер страницы
+        in: query
+        name: page
+        type: integer
+      - description: Количество записей на странице, по умолчанию 10
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/handlers.Song'
+            type: array
+        "500":
+          description: Ошибка выполнения запроса
+          schema:
+            type: string
+      summary: Получение списка песен
+      tags:
+      - Songs
+    post:
+      consumes:
+      - application/json
+      description: Добавляет новую песню в библиотеку. Если переменная окружения EXTERNAL_API_URL
+        пустая, используется мок-режим для получения данных.
+      parameters:
+      - description: Данные песни
+        in: body
+        name: song
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.AddSongRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/handlers.Song'
+        "400":
+          description: Некорректные входные данные
+          schema:
+            type: string
+        "500":
+          description: Ошибка выполнения запроса
+          schema:
+            type: string
+      summary: Добавление новой песни
+      tags:
+      - Songs
+  /songs/{id}:
+    delete:
+      description: Удаляет песню по её идентификатору
+      parameters:
+      - description: ID песни
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: Песня удалена
+          schema:
+            type: string
+        "400":
+          description: Некорректный ID
+          schema:
+            type: string
+        "404":
+          description: Песня не найдена
+          schema:
+            type: string
+        "500":
+          description: Ошибка выполнения запроса
+          schema:
+            type: string
+      summary: Удаление песни
+      tags:
+      - Songs
+    get:
+      description: Возвращает текст песни по ID. Если указан параметр verse, возвращается
+        только соответствующий куплет текста.
+      parameters:
+      - description: ID песни
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Номер куплета (необязательный)
+        in: query
+        name: verse
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.Song'
+        "400":
+          description: Некорректный запрос
+          schema:
+            type: string
+        "404":
+          description: Песня не найдена или куплет отсутствует
+          schema:
+            type: string
+      summary: Получение текста песни
+      tags:
+      - Songs
+    put:
+      consumes:
+      - application/json
+      description: Обновляет данные о песне по её идентификатору
+      parameters:
+      - description: ID песни
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Обновлённые данные песни
+        in: body
+        name: song
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.Song'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Песня обновлена
+          schema:
+            type: string
+        "400":
+          description: Некорректные входные данные
+          schema:
+            type: string
+        "404":
+          description: Песня не найдена
+          schema:
+            type: string
+        "500":
+          description: Ошибка выполнения запроса
+          schema:
+            type: string
+      summary: Обновление данных о песне
+      tags:
+      - Songs
+swagger: "2.0"
