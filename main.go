@@ -24,11 +24,12 @@ func main() {
 
 	// Сборка Data Source Name для подключение к PostgreSQL без указания имени базы данных
 	dsnNoDB := fmt.Sprintf(
-		"host=%s port=%s user=%s password=%s sslmode=disable",
+		"host=%s port=%s user=%s password=%s sslmode=%s",
 		os.Getenv("DB_HOST"),
 		os.Getenv("DB_PORT"),
 		os.Getenv("DB_USER"),
 		os.Getenv("DB_PASSWORD"),
+		os.Getenv("DB_SSLMODE"),
 	)
 
 	// Запуск миграции через аргументы без запуска сервера

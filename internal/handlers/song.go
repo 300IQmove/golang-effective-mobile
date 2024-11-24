@@ -10,10 +10,31 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/300IQmove/golang-effective-mobile/internal/models"
-
 	"github.com/julienschmidt/httprouter"
 )
+
+// Song представляет модель песни
+type Song struct {
+	ID          int    `json:"id"`
+	GroupName   string `json:"group_name"`             // Название группы
+	SongTitle   string `json:"song_title"`             // Название песни
+	ReleaseDate string `json:"release_date,omitempty"` // Дата выпуска песни
+	Text        string `json:"text,omitempty"`         // Текст песни
+	Link        string `json:"link,omitempty"`         // Ссылка на песню
+}
+
+// AddSongRequest представляет данные для добавления новой песни в формате задания 1
+type AddSongRequest struct {
+	Group string `json:"group"` // Название группы
+	Song  string `json:"song"`  // Название песни
+}
+
+// SongDetail описывает ответ внешнего API
+type SongDetail struct {
+	ReleaseDate string `json:"releaseDate"`
+	Text        string `json:"text"`
+	Link        string `json:"link"`
+}
 
 // Handler содержит ссылку на базу данных
 type Handler struct {
@@ -68,9 +89,9 @@ func (h *Handler) ListSongsHandler(w http.ResponseWriter, r *http.Request, _ htt
 	defer rows.Close()
 
 	// Сканирование результатов
-	var songs []models.Song
+	var songs []Song
 	for rows.Next() {
-		var song models.Song
+		var song Song
 		if err := rows.Scan(&song.ID, &song.GroupName, &song.SongTitle); err != nil {
 			log.Printf("Ошибка чтения данных: %v", err)
 			http.Error(w, "Ошибка чтения данных", http.StatusInternalServerError)
@@ -103,7 +124,7 @@ func (h *Handler) GetSongHandler(w http.ResponseWriter, r *http.Request, ps http
 		return
 	}
 
-	var song models.Song
+	var song Song
 	var text, link *string // Указатели для полей, которые могут быть NULL
 	query := `SELECT id, group_name, song_title, text, link FROM songs WHERE id = $1`
 	err = h.DB.QueryRow(query, id).Scan(&song.ID, &song.GroupName, &song.SongTitle, &text, &link)
@@ -168,7 +189,7 @@ func (h *Handler) GetSongHandler(w http.ResponseWriter, r *http.Request, ps http
 // @Router /songs [post]
 func (h *Handler) AddSongHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	// Проверка формата входных данных
-	var input models.AddSongRequest
+	var input AddSongRequest
 	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
 		log.Printf("Некорректные входные данные: %v", err)
 		http.Error(w, "Некорректные входные данные", http.StatusBadRequest)
@@ -206,13 +227,13 @@ func (h *Handler) AddSongHandler(w http.ResponseWriter, r *http.Request, _ httpr
 }
 
 // fetchSongDetails выполняет запрос к внешнему API "EXTERNAL_API_URL" в .env
-func fetchSongDetails(group, song string) (*models.SongDetail, error) {
+func fetchSongDetails(group, song string) (*SongDetail, error) {
 	apiURL := os.Getenv("EXTERNAL_API_URL")
 
 	// Если URL не задан, возвращаются мок-данные
 	if apiURL == "" {
 		log.Println("EXTERNAL_API_URL не задан, получены мок-данные")
-		return &models.SongDetail{
+		return &SongDetail{
 			ReleaseDate: "2006-07-16",
 			Text: `Ooh baby, don't you know I suffer?
 Ooh baby, can you hear me moan?
@@ -253,7 +274,7 @@ You set my soul alight`,
 	}
 
 	// Декодирование ответа
-	var details models.SongDetail
+	var details SongDetail
 	if err := json.NewDecoder(resp.Body).Decode(&details); err != nil {
 		return nil, fmt.Errorf("Ошибка декодирования ответа: %v", err)
 	}
@@ -286,7 +307,7 @@ func (h *Handler) UpdateSongHandler(w http.ResponseWriter, r *http.Request, ps h
 		return
 	}
 
-	var song models.Song
+	var song Song
 	if err := json.NewDecoder(r.Body).Decode(&song); err != nil {
 		http.Error(w, "Некорректные входные данные", http.StatusBadRequest)
 		return

@@ -22,7 +22,7 @@ func HandleMigrations(args []string, dsnNoDB string) {
 		dsnWithDB := fmt.Sprintf("%s dbname=%s", dsnNoDB, os.Getenv("DB_NAME"))
 
 		// Миграция таблиц
-		RunSQLFile(dsnWithDB, "internal/migrations/sql/001_create_songs_table.up.sql")
+		RunSQLFile(dsnWithDB, "internal/migration/sql/001_create_songs_table.up.sql")
 		log.Println("Миграции 'up' успешно выполнены!")
 	// Обработка "down" миграций
 	case len(args) > 0 && args[0] == "down":
@@ -38,7 +38,7 @@ func HandleMigrations(args []string, dsnNoDB string) {
 		// Откат таблицы
 		case "table":
 			dsnWithDB := fmt.Sprintf("%s dbname=%s", dsnNoDB, os.Getenv("DB_NAME"))
-			RunSQLFile(dsnWithDB, "internal/migrations/sql/001_create_songs_table.down.sql")
+			RunSQLFile(dsnWithDB, "internal/migration/sql/001_create_songs_table.down.sql")
 			log.Println("Миграция 'down' для таблицы успешно выполнена!")
 		default:
 			log.Fatalf("Неизвестный параметр для 'down': %s", args[1])

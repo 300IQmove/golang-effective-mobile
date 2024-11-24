@@ -48,6 +48,8 @@ API документирован с использованием Swagger. Док
    DB_PASSWORD=<Ваш пароль>
    DB_NAME=effective_mobile
    APP_PORT=8080
+   DB_SSLMODE=disable
+   
    EXTERNAL_API_URL=<Адрес внешнего API. Не обязательно к заполнению, предусмотрен мок-тест>
    ```
    

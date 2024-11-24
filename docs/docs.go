@@ -46,13 +46,13 @@ const docTemplate = `{
                     },
                     {
                         "type": "integer",
-                        "description": "Номер страницы",
+                        "description": "Номер страницы (по умолчанию 1)",
                         "name": "page",
                         "in": "query"
                     },
                     {
                         "type": "integer",
-                        "description": "Количество записей на странице, по умолчанию 10",
+                        "description": "Количество записей на странице (по умолчанию 10)",
                         "name": "limit",
                         "in": "query"
                     }
@@ -140,7 +140,7 @@ const docTemplate = `{
                     },
                     {
                         "type": "integer",
-                        "description": "Номер куплета (необязательный)",
+                        "description": "Номер куплета (по умолчанию полный текст)",
                         "name": "verse",
                         "in": "query"
                     }
@@ -288,21 +288,26 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "group_name": {
+                    "description": "Название группы",
                     "type": "string"
                 },
                 "id": {
                     "type": "integer"
                 },
                 "link": {
+                    "description": "Ссылка на песню",
                     "type": "string"
                 },
                 "release_date": {
+                    "description": "Дата выпуска песни",
                     "type": "string"
                 },
                 "song_title": {
+                    "description": "Название песни",
                     "type": "string"
                 },
                 "text": {
+                    "description": "Текст песни",
                     "type": "string"
                 }
             }
