@@ -1,5 +1,5 @@
 definitions:
-  handlers.AddSongRequest:
+  models.AddSongRequest:
     properties:
       group:
         description: Название группы
@@ -8,7 +8,7 @@ definitions:
         description: Название песни
         type: string
     type: object
-  handlers.Song:
+  models.Song:
     properties:
       group_name:
         description: Название группы
@@ -63,7 +63,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/handlers.Song'
+              $ref: '#/definitions/models.Song'
             type: array
         "500":
           description: Ошибка выполнения запроса
@@ -83,14 +83,14 @@ paths:
         name: song
         required: true
         schema:
-          $ref: '#/definitions/handlers.AddSongRequest'
+          $ref: '#/definitions/models.AddSongRequest'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/handlers.Song'
+            $ref: '#/definitions/models.Song'
         "400":
           description: Некорректные входные данные
           schema:
@@ -152,7 +152,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/handlers.Song'
+            $ref: '#/definitions/models.Song'
         "400":
           description: Некорректный запрос
           schema:
@@ -179,7 +179,7 @@ paths:
         name: song
         required: true
         schema:
-          $ref: '#/definitions/handlers.Song'
+          $ref: '#/definitions/models.Song'
       produces:
       - application/json
       responses:

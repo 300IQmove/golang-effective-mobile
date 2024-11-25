@@ -63,7 +63,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/handlers.Song"
+                                "$ref": "#/definitions/models.Song"
                             }
                         }
                     },
@@ -94,7 +94,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/handlers.AddSongRequest"
+                            "$ref": "#/definitions/models.AddSongRequest"
                         }
                     }
                 ],
@@ -102,7 +102,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/handlers.Song"
+                            "$ref": "#/definitions/models.Song"
                         }
                     },
                     "400": {
@@ -149,7 +149,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/handlers.Song"
+                            "$ref": "#/definitions/models.Song"
                         }
                     },
                     "400": {
@@ -192,7 +192,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/handlers.Song"
+                            "$ref": "#/definitions/models.Song"
                         }
                     }
                 ],
@@ -271,7 +271,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "handlers.AddSongRequest": {
+        "models.AddSongRequest": {
             "type": "object",
             "properties": {
                 "group": {
@@ -284,7 +284,7 @@ const docTemplate = `{
                 }
             }
         },
-        "handlers.Song": {
+        "models.Song": {
             "type": "object",
             "properties": {
                 "group_name": {
